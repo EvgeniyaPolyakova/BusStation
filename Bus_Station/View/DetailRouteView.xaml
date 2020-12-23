@@ -1,0 +1,253 @@
+﻿<Window x:Class="Bus_Station.View.DetailRouteView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bus_Station.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign1="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        mc:Ignorable="d"
+        Title="Детальный просмотр маршрута" Height="600" Width="570">
+    <Window.Resources>
+        <Style x:Key="show" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hide" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="showButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hideButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFloatingActionMiniAccentButton}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="showTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hideTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource MaterialDesignTextBox}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="showTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hideTextBlock" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource MaterialDesignTextBlock}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsEdit, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="10, 0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.10*"/>
+            <RowDefinition Height="0.13*"/>
+            <RowDefinition Height="0.13*"/>
+            <!--RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/>
+            <RowDefinition Height="0.25*"/-->
+            <RowDefinition Height="0.13*"/>
+            <RowDefinition Height="0.5*"/>
+            <RowDefinition Height="0.15*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+
+
+        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="Детальный просмотр"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+        <Label Grid.Row="1" Grid.Column="0" Content="Маршрут"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Center"/>
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource showButton}" Command="{Binding ToggleEdit}" HorizontalAlignment="Right"  Margin ="0,0,15,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="CreateOutline"/>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource hideButton}" Command="{Binding SaveChanges}" HorizontalAlignment="Right"  Margin ="0,0,15,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="Done"/>
+        </Button>
+        <Button Grid.Row="1" Grid.Column="0" Style="{StaticResource hideButton}" Command="{Binding Clear}" HorizontalAlignment="Right"  Margin ="0,0,55,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="Clear"/>
+        </Button>
+
+        <!--Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+        </-->
+        <Label  Grid.Column="0" Grid.Row="2" Content="Пункт отправления"  MinWidth="150" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold"  VerticalAlignment="Top"  />
+        <TextBlock Grid.Column="0" Grid.Row="2" Style="{StaticResource showTextBlock}" Text="{Binding NameDeparturePlace, UpdateSourceTrigger=PropertyChanged}"  MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190"  HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+        <TextBox  Grid.Column="0" Grid.Row="2"  Style="{StaticResource hideTextBox}" Text="{Binding NameDeparturePlace}" MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBox>
+        <Label Grid.Column="0" Grid.Row="3" Content="Пункт прибытия"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold"  VerticalAlignment="Top"/>
+        <TextBlock Grid.Column="0" Grid.Row="3" Style="{StaticResource showTextBlock}" Text="{Binding NameArrivalPlace}"  MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190"  HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
+        <TextBox Grid.Column="0" Grid.Row="3" Style="{StaticResource hideTextBox}" Text="{Binding NameArrivalPlace, UpdateSourceTrigger=PropertyChanged}" MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" VerticalAlignment="Bottom" ></TextBox>
+        <Label Grid.Column="0" Grid.Row="4" Content="Стоимость"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" VerticalAlignment="Top"/>
+        <TextBlock Grid.Column="0" Grid.Row="4" Style="{StaticResource showTextBlock}" Text="{Binding CostRoute}" MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190"  HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBlock>
+        <TextBox  Grid.Column="0" Grid.Row="4" Style="{StaticResource hideTextBox}"  Text="{Binding CostRoute, UpdateSourceTrigger=PropertyChanged}" MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" VerticalAlignment="Bottom"></TextBox>
+
+
+        <Label Grid.Row="5" Grid.Column="0" Content="Добавить время отправления"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,160,10,0" />
+        <Label Grid.Row="5" Grid.Column="0" Content="Время отправления"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" VerticalAlignment="Top" Margin="0,0,10,0" />
+        <!--Button Grid.Row="8"  HorizontalAlignment="Right" Margin ="0,0,10,0"  Style="{StaticResource showButton}" Command="{Binding SaveChanges}" Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="CreateOutline"/>
+        </-->
+        <!--Button Grid.Row="8" Style="{StaticResource hideButton}" Command="{Binding ToggleEditDepartureTime}" HorizontalAlignment="Right"  Margin ="0,0,10,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="Done"/>
+        </-->
+        <!--Button Grid.Row="8" Style="{StaticResource hideButton}" HorizontalAlignment="Right"  Margin ="0,0,50,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="Clear"/>
+        </-->
+
+
+
+        <DataGrid Name="grid" ItemsSource="{Binding TimesList}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedTime}" IsReadOnly="True" Grid.Row="5" Grid.Column="0" HeadersVisibility="None" Margin="0,25,0,60">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Время" Binding="{Binding}" Width="5*"/>
+                <DataGridTemplateColumn Width="3*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="White" Foreground="#FFB673"
+                                    MaxHeight="25" MaxWidth="25"
+                                    Command="{Binding Path=DataContext.DeleteTime,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}" Style="{StaticResource showButton}"  BorderBrush="#FFB673"  HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Clear"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="5" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Command="{Binding CreateTime}" VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White" Margin="0,156,15,0">
+            <materialDesign:PackIcon Kind="Add" />
+        </Button>
+        <materialDesign:TimePicker Grid.Row="5" Grid.Column="0" SelectedTime="{Binding TimeForCreate, UpdateSourceTrigger=LostFocus}"  materialDesign:HintAssist.Hint="Время отправления"  VerticalAlignment="Top" Margin="5,190,60,0" />
+
+
+
+
+        <!--<ListBox SelectedItem="{Binding SelectedTime}" ItemsSource="{Binding TimesList}" Grid.Row="10" Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Visible">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        -->
+        <!--<Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="9*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>-->
+        <!--
+                        <TextBlock Text="{Binding}" Grid.Column="0"/>
+                        <Button Command="{Binding Path=DataContext.DeleteTime, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}">ddd</Button>
+                        <Button Command="{Binding DeleteTime, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" HorizontalAlignment="Right"  Margin ="0,0,50,0"  Foreground="#FFB673" MaxHeight="15" MaxWidth="15" Background="White" Grid.Column="1">
+                            <materialDesign:PackIcon Kind="Delete"/>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>-->
+        <!--<TextBlock  Grid.Row="9" Style="{StaticResource show}"  Text="{Binding DepartureTimesRoute}" MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" Margin="10,0,0,0"></TextBlock>-->
+
+        <Label Grid.Row="1" Grid.Column="1" Content="Остановки"  MinWidth="100" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" HorizontalAlignment="Center"/>
+        <!--Button Grid.Row="1" Grid.Column="1" Margin ="0,0,10,0" HorizontalAlignment="Right" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="CreateOutline"/>
+        </>
+        <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource showButton}" Command="{Binding ToggleEdit}" HorizontalAlignment="Right"  Margin ="0,0,50,0"  Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White">
+            <materialDesign:PackIcon Kind="Add"/>
+        </Button-->
+        <!--<ListBox Style="{StaticResource show}" ItemsSource="{Binding StopsList}" Grid.Row="2" Grid.Column="1" Grid.RowSpan="10"></ListBox>-->
+
+        <!--<Label Grid.Row="2" Grid.Column="1" Style="{StaticResource hide}" Content="Название"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+        <TextBox  Grid.Row="3" Grid.Column="1" Style="{StaticResource hide}"  MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" Margin="10,0,0,0">TextBox</TextBox>
+        <Label Grid.Row="4" Grid.Column="1" Style="{StaticResource hide}" Content="Стоимость"  MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" Margin="10,0,0,0" VerticalAlignment="Center"/>
+        <TextBox  Grid.Row="5" Grid.Column="1" Style="{StaticResource hide}"  MaxHeight="25" MaxWidth="190" MinHeight="25" MinWidth="190" HorizontalAlignment="Left" Margin="10,0,0,0">TextBox</TextBox>-->
+        <!--StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="2">
+            <TextBox Text="Name" HorizontalAlignment="Left"/>
+            <TextBox Text="Cost" HorizontalAlignment="Right"/>
+        </-->
+        <DataGrid ItemsSource="{Binding StopsList}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedTime}" IsReadOnly="True" Grid.Row="2" Grid.Column="1" Grid.RowSpan="3">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название" Binding="{Binding Path=Name}" Width="3.5*"/>
+                <DataGridTextColumn Header="Стоимость" Binding="{Binding Path=Cost}" Width="3.5*"/>
+                <DataGridTemplateColumn Width="2*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Background="White" Foreground="#FFB673"
+                                    MaxHeight="25" MaxWidth="25"
+                                    Command="{Binding Path=DataContext.DeleteStop,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                    CommandParameter="{Binding}" Style="{StaticResource showButton}"  BorderBrush="#FFB673"  HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Clear"/>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Label Grid.Column="1" Grid.Row="5" Content="Добавить остановку" MinWidth="150" MinHeight="35" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"/>
+        <Button Grid.Column="1" Grid.Row="5" Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" Command="{Binding CreateStop}" VerticalAlignment="Top" HorizontalAlignment="Right" Foreground="#FFB673" MaxHeight="30" MaxWidth="30" Background="White" Margin="0,0,15,0">
+            <materialDesign:PackIcon Kind="Add" />
+        </Button>
+        <StackPanel Grid.Column="1" Grid.Row="5" >
+            <Label Content="Название" MinWidth="150" MinHeight="30" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,30,0,0" Height="12" />
+            <TextBox MaxWidth="170" Margin="-20,0,50,0" Text="{Binding NameStop, UpdateSourceTrigger=PropertyChanged}" />
+            <Label Content="Стоимость" MinWidth="150" MinHeight="30" FontFamily="Times New Roman" FontSize="16" FontWeight="Bold" HorizontalAlignment="Left" Margin="10,0,0,0" Height="12" />
+            <TextBox MaxWidth="170" Margin="-20,0,50,0" Text="{Binding CostStop, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+
+
+        <Button Grid.Column="0" Grid.Row="6" Command="{Binding SaveChange}"  Background="White" Foreground="Orange" MinHeight="35" FontFamily="Times New Roman" FontSize="18" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" MinWidth="130" MaxWidth="130" Margin="10,0,0,0">Сохранить</Button>
+        <Button Grid.Column="1" Grid.Row="6" Command="{Binding CloseWindow}"  Background="White" Foreground="Orange" MinHeight="35" FontFamily="Times New Roman" FontSize="18" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" MinWidth="130" MaxWidth="130" Margin="10,0,0,0">Закрыть</Button>
+
+    </Grid>
+</Window>

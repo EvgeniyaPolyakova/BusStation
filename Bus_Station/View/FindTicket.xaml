@@ -1,0 +1,82 @@
+﻿<Window x:Class="Bus_Station.FindTicket"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        Icon="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Icon.jpg"
+        xmlns:local="clr-namespace:Bus_Station"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+         Title="Найти билет" Height="430" Width="600"  MinHeight="375" MinWidth="450" >
+    <Window.Resources>
+
+        <Style TargetType="Label">
+            <Setter Property="Control.FontFamily" Value="Times New Roman" />
+            <Setter Property="Control.FontSize" Value="18" />
+            <Setter Property="Control.FontWeight" Value="Bold"/>
+        </Style>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Control.FontFamily" Value="Times New Roman" />
+            <Setter Property="Control.FontSize" Value="12" />
+            <Setter Property="Control.FontWeight" Value="Bold"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Control.Background" Value="#848484"/>
+            <Setter Property="Control.FontFamily" Value="Times New Roman" />
+            <Setter Property="Control.FontSize" Value="18" />
+            <Setter Property="Control.FontWeight" Value="Bold"/>
+        </Style>
+
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.85*"/>
+            <RowDefinition Height="0.2*"/>
+        </Grid.RowDefinitions>
+        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.4*"/>
+            <ColumnDefinition Width="0.6*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" >
+            <Label Content="Найти билет"   VerticalAlignment="Center"  MaxWidth="174" MaxHeight="35" FontSize="26"/>
+        </StackPanel>
+
+        <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding ChangeUser}" Content="Сменить пользователя"  MaxWidth="270" Margin="0,6,0,0" VerticalAlignment="Top" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderBrush="Orange" HorizontalAlignment="Right"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+            <Label Content="Пункт отправления"  MinWidth="150" MinHeight="35"/>
+            <ComboBox ItemsSource="{Binding StartCities}" SelectedValue="{Binding SelectStartCity, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"  MinWidth="160" MinHeight="25" DisplayMemberPath="Name" />
+            <Label Content="Пункт прибытия"  MinWidth="150" MinHeight="35"/>
+            <ComboBox  ItemsSource="{Binding EndCities}" SelectedValue="{Binding SelectEndCity, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" MinWidth="170" MinHeight="25" DisplayMemberPath="Name"/>
+            <DatePicker SelectedDate="{Binding DepartureDate, UpdateSourceTrigger=LostFocus}" MinWidth="170" Margin="0,10,0,0"/>
+            <Label Content="Число пассажиров"   MinWidth="150" MinHeight="35"/>
+            <TextBox  Style="{StaticResource MaterialDesignTextBox}" Text="{Binding PassengerNumber, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinWidth="170"/>
+            <!--TextBox    VerticalAlignment="Center" MinHeight="24"/-->
+            <Button Command="{Binding FindTrip}" Content="Найти" HorizontalAlignment="Center"  MinWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0,10,0,0"/>
+        </StackPanel>
+
+        <!-- Grid.Row="1" Grid.Column="1" Margin="0,0,15,0" MinHeight="183"  MinWidth="206"/-->
+
+        <DataGrid Name="grid" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableTrips}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedTrip}" IsReadOnly="True">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction
+                        Command="{Binding Path=DataContext.ChangeSelectedTrip,RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                        CommandParameter="{Binding ElementName=grid, Path=SelectedItem}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Время отправления" Binding="{Binding Path=Time}" Width="*"/>
+                <DataGridTextColumn Header="Стоимость, руб" Binding="{Binding Path=Cost}" Width="*"/>
+             </DataGrid.Columns>
+        </DataGrid>
+
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding Arrange}" Content="Оформить" MaxWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" HorizontalAlignment="Left"/>
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding CloseWindow}" Content="Закрыть"  MaxWidth="150" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0 0 10 0" HorizontalAlignment="Right"/>
+    </Grid>
+</Window>

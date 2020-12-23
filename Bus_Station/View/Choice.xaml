@@ -1,0 +1,19 @@
+﻿<Window x:Class="Bus_Station.View.Choice"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bus_Station.View"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesign1="http://schemas.microsoft.com/netfx/2009/xaml/presentation"
+        mc:Ignorable="d"
+        Title="Выбор действия" Height="250" Width="420">
+    <Grid>
+        <Label Content="Пожалуйста, выберите действие" FontFamily="Times New Roman" FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" Margin="0,20,0,0"/>
+        <StackPanel VerticalAlignment="Center">
+            <Button Command="{Binding EditRoute}" Content="Редактировать список маршрутов"  MaxWidth="270" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange"/>
+            <Button Command="{Binding CreateReport}" Content="Создать отчёт"  MaxWidth="270" Margin="0,10,0,0" BorderThickness="2" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderBrush="Orange"/>
+        </StackPanel>
+            <Button Command="{Binding ChangeUser}" Content="Сменить пользователя"  MaxWidth="270" Margin="0,0,0,10" VerticalAlignment="Bottom" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderBrush="Orange"/>
+    </Grid>
+</Window>
