@@ -57,8 +57,8 @@ namespace Bus_Station.ViewModel
                     (changeUser = new RelayCommand(obj =>
                     {
                         MainWindow mainWindow = new MainWindow();
-                        mainWindow.ShowDialog();
                         WindowManager.CloseWindow(ViewID);
+                        mainWindow.ShowDialog();
                     }));
             }
         }

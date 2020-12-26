@@ -25,43 +25,20 @@ namespace Bus_Station
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
+            DataContext = new MainWindowViewModel();
         }
 
-        private RelayCommand cashierButton;
-        public RelayCommand CashierButton
-        {
-            get
-            {
-                return cashierButton ??
-                    (cashierButton = new RelayCommand(obj =>
-                    {
-                        PasswordWindow passwordWindow = new PasswordWindow();
-                        passwordWindow.ShowDialog();
-                    }));
-            }
-        }
 
         private void CashierButton_Click(object sender, RoutedEventArgs e)
         {
-            /*PasswordWindow passwordWindow = new PasswordWindow();
-            passwordWindow.ShowDialog();
-            this.Close();
-            /*Button clickedbutton = sender as Button;
-            if (clickedbutton.Name == "CashierButton")
-                User = true;
-            else User = false;*/
+
         }
 
       
 
         private void LeaderButton_Click(object sender, RoutedEventArgs e)
         {
-            /*PasswordWindow passwordWindow = new PasswordWindow();
-            passwordWindow.ShowDialog();*/
-            //Choice choice = new Choice();
-            //choice.Show();
-            //this.Close();
+            
         }
     }
 }

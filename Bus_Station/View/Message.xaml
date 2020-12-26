@@ -1,0 +1,13 @@
+﻿<Window x:Class="Bus_Station.View.Message"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Bus_Station.View"
+        mc:Ignorable="d"
+        Title="Сообщение" Height="150" Width="250">
+    <Grid>
+        <Label Content="Билет сохранён" HorizontalAlignment="Center" Margin="15" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24"/>
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding CloseWindow}" Content="Ок" HorizontalAlignment="Center"   MinWidth="152"  Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0 40 0 0"/>
+    </Grid>
+</Window>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bus_Station.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,22 +23,12 @@ namespace Bus_Station
         public PasswordWindow()
         {
             InitializeComponent();
+            DataContext = new PasswordWindowViewModel();
         }
 
         private void InputButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Авторизация пройдена!");
-            MainWindow mainWindow = new MainWindow();
 
-            //FindTicket findTicket = new FindTicket();
-            //findTicket.Show();
-
-            Report report = new Report();
-            report.Show();
-
-            this.Close();
         }
-
-
     }
 }

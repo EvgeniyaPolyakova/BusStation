@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\App.xaml
-9-1663808918
+102099441835
 
-481331484491
+45661749207
 26-1149697819
-View\Choice.xaml;View\DetailRouteView.xaml;View\Diagram.xaml;View\FindTicket.xaml;View\MainWindow.xaml;View\Passenger.xaml;View\PasswordWindow.xaml;View\Report.xaml;View\TimeTable.xaml;
+View\Choice.xaml;View\DetailRouteView.xaml;View\Diagram.xaml;View\FindTicket.xaml;View\MainWindow.xaml;View\Message.xaml;View\Passenger.xaml;View\PasswordWindow.xaml;View\Report.xaml;View\TimeTable.xaml;
 
-False
+True
 

@@ -29,7 +29,7 @@ namespace Bus_Station.ViewModel
         TimeSpan selectedTime;
         DateTime timeForCreate;
         private string nameStop;
-        private string costStop;
+        private Decimal costStop;
         BusStationContext db;
 
         public event View.DetailRouteView.CreateHandler UpdateItemTimeTable;
@@ -114,7 +114,7 @@ namespace Bus_Station.ViewModel
             }
         }
         
-        private RelayCommand toggleEditDepartureTime;
+       /* private RelayCommand toggleEditDepartureTime;
         public RelayCommand ToggleEditDepartureTime
         {
             get
@@ -125,7 +125,7 @@ namespace Bus_Station.ViewModel
                         IsEdit = !IsEdit;
                     }));
             }
-        }
+        }*/
 
         public ObservableCollection<Stop> StopsList
         {
@@ -143,16 +143,24 @@ namespace Bus_Station.ViewModel
                 return createStop ??
                     (createStop = new RelayCommand(obj =>
                     {
-                        var stop = new Stop()
+                        try
                         {
-                            Name = this.nameStop,
-                            Cost = Convert.ToDecimal(this.costStop),
-                        };
-                        this.stopsList.Add(stop);
+                            var stop = new Stop()
+                            {
+                                Name = this.nameStop,
+                                Cost = Convert.ToDecimal(this.costStop),
+                            };
+                            this.stopsList.Add(stop);
 
-                        this.NameStop = "";
-                        this.CostStop = "";
-                    }));
+                            this.NameStop = "";
+                            this.CostStop = default(decimal);
+                        }
+                        catch
+                        {
+                           
+                        }
+                    },
+                    (obj) => (NameStop != "" && Convert.ToDecimal(CostStop) > 0 && Convert.ToDecimal(CostStop) < CostRoute)));
             }
         }
 
@@ -281,7 +289,7 @@ namespace Bus_Station.ViewModel
             }
         }
 
-        public string CostStop
+        public Decimal CostStop
         {
             get
             {
@@ -353,27 +361,6 @@ namespace Bus_Station.ViewModel
             }
         }
 
-        private RelayCommand exit;
-        public RelayCommand Exit
-        {
-            get
-            {
-                return exit ??
-                    (exit = new RelayCommand(obj =>
-                    {
-
-                    }));
-            }
-        }
-
-        //public ObservableCollection<Trips> SaveTrips
-        //{
-        //    get
-        //    {
-        //        return this.trip;
-        //    }
-        //}
-
         private RelayCommand saveChange;
         public RelayCommand SaveChange
         {
@@ -425,7 +412,8 @@ namespace Bus_Station.ViewModel
                                 db.Trip.Add(new Trip()
                                 {
                                     IdTrip = maxIdTrip,
-                                    Departure_time = time
+                                    Departure_time = time,
+                                    IdBus_FK = 9
                                 });
                                 trigger = true;
                             }
@@ -446,10 +434,7 @@ namespace Bus_Station.ViewModel
                         {
                             timesForUpdate.Add(item);
                         }
-
-
-
-
+                        
                         List<int> doActiveStops = new List<int>();
                         List<int> doInActiveStops = new List<int>();
 
@@ -488,7 +473,7 @@ namespace Bus_Station.ViewModel
                                 trigger = true;
                             }
 
-                            var idCost = db.Cost.Where(i => i.Cost1 == stop.Cost).FirstOrDefault().IdCost;
+                            var idCost = db.Cost.Where(i => i.Cost1 == stop.Cost).FirstOrDefault() == null ? default(int) : db.Cost.Where(i => i.Cost1 == stop.Cost).FirstOrDefault().IdCost;
                             int maxIdCost = 0;
                             if (idCost == default(int))
                             {
@@ -526,7 +511,8 @@ namespace Bus_Station.ViewModel
                             DepartureTime = timesForUpdate,
                             StopList = stopsForUpdateInTable
                         });
-                    }));
+                    },
+                    (obj) => (NameDeparturePlace != "" && NameArrivalPlace != "" && CostRoute != 0 && timesList.Count != 0)));
             }
         }
 
@@ -547,6 +533,55 @@ namespace Bus_Station.ViewModel
         public Guid ViewID
         {
             get { return _viewId; }
+        }
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case "CostRoute":
+                        try
+                        {
+                            if (CostRoute <= 0)
+                            {
+                                error = "Стоимость должна быть положительная";
+                            }
+                        }
+
+                        catch (Exception)
+                        {
+                            error = "Стоимость должна быть числом";
+                        }
+                        break;
+                    case "CostStop":
+                        try
+                        {
+                            if (Convert.ToDecimal(CostStop) >= CostRoute)
+                            {
+                                error = "Стоимость должна быть меньше стоимости маршрута";
+                            }
+
+                            if (Convert.ToDecimal(CostStop) <= 0)
+                            {
+                                error = "Стоимость должна быть положительная";
+                            }
+                        }
+
+                        catch (Exception)
+                        {
+                            error = "Стоимость должна быть числом";
+                        }
+                        break;
+                }
+                return error;
+            }
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

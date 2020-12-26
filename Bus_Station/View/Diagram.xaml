@@ -6,18 +6,51 @@
         xmlns:local="clr-namespace:Bus_Station.View"
         xmlns:Wpf="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="Графики" Height="650" Width="800">
+        Title="Графики" Height="780" Width="800">
+    <Window.Resources>
+        <Style x:Key="show" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hide" TargetType="{x:Type FrameworkElement}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <Grid x:Name="Chart">
-        <!--<Label Content="Отчёт" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" Margin="0,20,0,0"/>-->
-        <StackPanel Orientation="Vertical">
-            <DatePicker VerticalAlignment="Top" SelectedDate="{Binding DateStart, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" ></DatePicker>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        
+        <Label Content="Отчёт" Grid.Row="0" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" Margin="0 10 0 0"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+            <Label Content="Выручка за период с " FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center"/>
+            <DatePicker VerticalAlignment="Top"  SelectedDate="{Binding DateStart, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" MaxWidth="180"></DatePicker>
+            <Label Content=" по " Grid.Row="1" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center"/>
             <DatePicker VerticalAlignment="Top" SelectedDate="{Binding DateEnd, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" ></DatePicker>
         </StackPanel>
-        <!--<Label Content="Выручка за последние 3 месяца" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" Margin="0,50,0,0"/>-->
-        <Wpf:PieChart SeriesColors="{Binding ColorCollection}" LegendLocation="Right" Series="{Binding Proceeds}" Width="600" Height="600" Margin="30 50 0 0" HorizontalAlignment="Center">
+        <Wpf:PieChart Grid.Row="3" SeriesColors="{Binding ColorCollection}" LegendLocation="Right" Series="{Binding Proceeds}" Width="600" Height="600" Margin="30 0 0 0" HorizontalAlignment="Center">
             
         </Wpf:PieChart>
-        <Button Command="{Binding CloseWindow}" Content="Закрыть"  MaxWidth="150" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 20 20" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange"/>
-        
+        <Button Grid.Row="3" Command="{Binding CloseWindow}" Content="Закрыть"  MaxWidth="150" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 20 20" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange"/>
+
+        <!--Label Grid.RowSpan="3" Content="За выбранный вами период не продано ни одного билета" Style="{StaticResource hide}" FontFamily="Times New Roman" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/-->
+        <TextBlock Grid.Row="2" Text="{Binding Message}" FontFamily="Times New Roman" FontSize="18" Foreground="Red" Margin="0 0 0 0" HorizontalAlignment="Center" TextWrapping ="Wrap"/>
+
     </Grid>
 </Window>

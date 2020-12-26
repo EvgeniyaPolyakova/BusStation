@@ -37,8 +37,6 @@ C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\А
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\EntityFramework.xml
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\ru\EntityFramework.resources.dll
-C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\Bus_Station.Migrations.InitialCreate.resources
-C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\Bus_Station.Migrations.addisActivecolumn.resources
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Choice.g.cs
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Diagram.g.cs
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\LiveCharts.dll
@@ -50,7 +48,6 @@ C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\А
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Choice.baml
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Diagram.baml
-C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\Bus_Station.Migrations.addingisActivecolumn.resources
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\Microsoft.Expression.Interactions.dll
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\en\Microsoft.Expression.Interactions.resources.dll
@@ -74,3 +71,5 @@ C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\А
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\BouncyCastle.Crypto.dll
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\itextsharp.dll
 C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\bin\Debug\itextsharp.xml
+C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Message.g.cs
+C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus_Station\Bus_Station\obj\Debug\View\Message.baml

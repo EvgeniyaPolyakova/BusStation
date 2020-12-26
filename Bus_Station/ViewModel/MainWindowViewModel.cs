@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bus_Station.Auth;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -7,11 +8,11 @@ using System.Runtime.CompilerServices;
 
 namespace Bus_Station
 {
-    public class MainWindowViewModel
+    public class MainWindowViewModel : IRequireViewIdentification
     {
         public MainWindowViewModel()
         {
-
+            _viewId = Guid.NewGuid();
         }
         private RelayCommand cashierButton;
         public RelayCommand CashierButton
@@ -23,6 +24,7 @@ namespace Bus_Station
                     {
                         PasswordWindow passwordWindow = new PasswordWindow();
                         passwordWindow.ShowDialog();
+                        WindowManager.CloseWindow(ViewID);
                     }));
             }
         }
@@ -37,8 +39,15 @@ namespace Bus_Station
                     {
                         PasswordWindow passwordWindow = new PasswordWindow();
                         passwordWindow.ShowDialog();
+                        WindowManager.CloseWindow(ViewID);
                     }));
             }
+        }
+
+        private Guid _viewId;
+        public Guid ViewID
+        {
+            get { return _viewId; }
         }
     }
 }

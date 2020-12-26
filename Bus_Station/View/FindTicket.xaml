@@ -3,13 +3,39 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Icon="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Icon.jpg"
+    
         xmlns:local="clr-namespace:Bus_Station"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-         Title="Найти билет" Height="430" Width="600"  MinHeight="375" MinWidth="450" >
+         Title="Найти билет" Height="460" Width="600"  MinHeight="375" MinWidth="450" >
     <Window.Resources>
+        <ControlTemplate x:Key="validationFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+                <TextBlock Foreground="Red" FontSize="20" FontWeight="Bold">Стоимость остановки больше стоимости маршрута</TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+
+            <Style x:Key="show" TargetType="{x:Type TextBlock}">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="hide" TargetType="{x:Type TextBlock}">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
         <Style TargetType="Label">
             <Setter Property="Control.FontFamily" Value="Times New Roman" />
@@ -28,11 +54,12 @@
             <Setter Property="Control.FontSize" Value="18" />
             <Setter Property="Control.FontWeight" Value="Bold"/>
         </Style>
-
+        
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="0.2*"/>
+            <RowDefinition Height="0.15*"/>
+            <RowDefinition Height="0.1*"/>
             <RowDefinition Height="0.85*"/>
             <RowDefinition Height="0.2*"/>
         </Grid.RowDefinitions>
@@ -48,21 +75,34 @@
 
         <Button Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Command="{Binding ChangeUser}" Content="Сменить пользователя"  MaxWidth="270" Margin="0,6,0,0" VerticalAlignment="Top" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderBrush="Orange" HorizontalAlignment="Right"/>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center">
+        <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Message}" FontFamily="Times New Roman" FontSize="18" Foreground="Red" Margin="0 0 0 0" HorizontalAlignment="Center"/>
+        
+        <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center">
             <Label Content="Пункт отправления"  MinWidth="150" MinHeight="35"/>
             <ComboBox ItemsSource="{Binding StartCities}" SelectedValue="{Binding SelectStartCity, UpdateSourceTrigger=PropertyChanged}" IsEditable="True"  MinWidth="160" MinHeight="25" DisplayMemberPath="Name" />
             <Label Content="Пункт прибытия"  MinWidth="150" MinHeight="35"/>
             <ComboBox  ItemsSource="{Binding EndCities}" SelectedValue="{Binding SelectEndCity, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" MinWidth="170" MinHeight="25" DisplayMemberPath="Name"/>
-            <DatePicker SelectedDate="{Binding DepartureDate, UpdateSourceTrigger=LostFocus}" MinWidth="170" Margin="0,10,0,0"/>
+            <DatePicker SelectedDate="{Binding DepartureDate, UpdateSourceTrigger=LostFocus}" MinWidth="170" Margin="0,10,0,0">
+            </DatePicker>
             <Label Content="Число пассажиров"   MinWidth="150" MinHeight="35"/>
-            <TextBox  Style="{StaticResource MaterialDesignTextBox}" Text="{Binding PassengerNumber, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" MinWidth="170"/>
+            <TextBox  Style="{StaticResource MaterialDesignTextBox}" TextWrapping="Wrap" MinWidth="170">
+                <TextBox.Text>
+                    <Binding Path="PassengerNumber" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <!--TextBox    VerticalAlignment="Center" MinHeight="24"/-->
             <Button Command="{Binding FindTrip}" Content="Найти" HorizontalAlignment="Center"  MinWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0,10,0,0"/>
         </StackPanel>
 
+
         <!-- Grid.Row="1" Grid.Column="1" Margin="0,0,15,0" MinHeight="183"  MinWidth="206"/-->
 
-        <DataGrid Name="grid" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableTrips}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedTrip}" IsReadOnly="True">
+                
+        <DataGrid Name="grid" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding AvailableTrips}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding SelectedTrip}" IsReadOnly="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction
@@ -76,7 +116,7 @@
              </DataGrid.Columns>
         </DataGrid>
 
-        <Button Grid.Row="2" Grid.Column="1" Command="{Binding Arrange}" Content="Оформить" MaxWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" HorizontalAlignment="Left"/>
-        <Button Grid.Row="2" Grid.Column="1" Command="{Binding CloseWindow}" Content="Закрыть"  MaxWidth="150" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0 0 10 0" HorizontalAlignment="Right"/>
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding Arrange}" Content="Оформить" MaxWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" HorizontalAlignment="Left"/>
+        <Button Grid.Row="3" Grid.Column="1" Command="{Binding CloseWindow}" Content="Закрыть"  MaxWidth="150" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" Margin="0 0 10 0" HorizontalAlignment="Right"/>
     </Grid>
 </Window>

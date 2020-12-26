@@ -3,13 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Icon="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Icon.jpg"
         xmlns:local="clr-namespace:Bus_Station"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
         Title="Расписание автобусов" Height="512" Width="800">
+    <Window.Resources>
+        <!--<ControlTemplate x:Key="validationFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+            </StackPanel>
+        </ControlTemplate>-->
+
+        <ControlTemplate x:Key="validationStopFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+                <TextBlock Foreground="Red" FontSize="20" FontWeight="Bold">Стоимость остановки больше стоимости маршрута</TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+    </Window.Resources>
     <Grid>
-        <DataGrid Name="grid" ItemsSource="{Binding ListTrips}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding Selected}" IsReadOnly="True">
+        <DataGrid Name="grid" ItemsSource="{Binding ListTrips}" AutoGenerateColumns="False" CanUserAddRows="False" SelectedItem="{Binding Selected}" IsReadOnly="True" Margin="0,0,0,65">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Пункт отправления" Binding="{Binding Path=DeparturePlace}" Width="2.8*"/>
                 <DataGridTextColumn Header="Пункт прибытия" Binding="{Binding Path=ArrivalPlace}" Width="2.5*"/>
@@ -100,9 +117,18 @@
                                 <RowDefinition Height="1*" />
                             </Grid.RowDefinitions>
 
-                            <ComboBox Grid.Row="0"  DisplayMemberPath="Name" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Отправление" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" ItemsSource="{Binding StartCities}" SelectedValue="{Binding SelectStartCity, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBox Grid.Row="0"  DisplayMemberPath="Name" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Отправление" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" ItemsSource="{Binding StartCities}" Text="{Binding TextStartCity, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" SelectedValue="{Binding SelectStartCity, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
-                            <TextBox Text="{Binding Cost, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1"  materialDesign:HintAssist.Hint="Стоимость" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0 5" VerticalAlignment="Center" />
+                            <TextBox Grid.Row="1"  materialDesign:HintAssist.Hint="Стоимость" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0 5" VerticalAlignment="Center"
+                                      >
+                                <TextBox.Text>
+                                    <Binding Path="Cost" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <DataErrorValidationRule />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
                         </Grid>
                         <Grid Grid.Column="1"  Margin="20,0">
                             <Grid.RowDefinitions>
@@ -113,7 +139,7 @@
                                 <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <ComboBox Grid.Row="0"  DisplayMemberPath="Name" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Прибытие" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Margin="0" ItemsSource="{Binding EndCities}" SelectedValue="{Binding SelectEndCity, UpdateSourceTrigger=PropertyChanged}">
+                            <ComboBox Grid.Row="0" DisplayMemberPath="Name" VerticalAlignment="Center" materialDesign:HintAssist.Hint="Прибытие" Style="{StaticResource MaterialDesignFloatingHintComboBox}" IsEditable="True" Margin="0" Text="{Binding TextEndCity, UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" ItemsSource="{Binding EndCities}" SelectedValue="{Binding SelectEndCity, UpdateSourceTrigger=PropertyChanged}">
                             </ComboBox>
                             <materialDesign:TimePicker Grid.Row="1" Grid.Column="0" SelectedTime="{Binding Time, UpdateSourceTrigger=LostFocus}"  materialDesign:HintAssist.Hint="Время отправления" Margin="0 5" VerticalAlignment="Center"/>
                             <Button Grid.Row="1" Grid.Column="1" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding CreateTime}" HorizontalAlignment="Right">
@@ -128,7 +154,7 @@
                             <ColumnDefinition Width="2"/>
                         </Grid.ColumnDefinitions>
                     </Grid>
-                    <Grid Grid.Row="2" Margin="50,0,0,0">
+                    <Grid Grid.Row="2" Margin="50,30,0,0">
                         <ListBox ItemsSource="{Binding Stops}"  Grid.Column="0" ScrollViewer.VerticalScrollBarVisibility="Visible">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -162,7 +188,15 @@
                             <ColumnDefinition Width="1*"/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0" Text="{Binding NameStop, UpdateSourceTrigger=PropertyChanged}" materialDesign:HintAssist.Hint="Название" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0 5" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="1" Text="{Binding CostStop, UpdateSourceTrigger=PropertyChanged}"  materialDesign:HintAssist.Hint="Стоимость" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0 5" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1"  materialDesign:HintAssist.Hint="Стоимость" Style="{StaticResource MaterialDesignFloatingHintTextBox}" Margin="0 5" VerticalAlignment="Center" >
+                            <TextBox.Text>
+                                <Binding Path="CostStop" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <DataErrorValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
                         <Button Grid.Column="3" Style="{DynamicResource MaterialDesignFlatButton}" Command="{Binding CreateStop}">
                             <materialDesign:PackIcon Kind="AddCircle" Width="25" Height="25" Foreground="#FFB673"/>
                         </Button>

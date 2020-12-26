@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Icon="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Icon.jpg"
         xmlns:local="clr-namespace:Bus_Station"
          xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
@@ -39,11 +38,7 @@
 
         <Label Grid.Column="1" Grid.Row="0" Content="Добро пожаловать!" HorizontalAlignment="Center" VerticalAlignment="Center"   MaxWidth="230" MaxHeight="35" />
 
-        <!--Image Grid.Column="2" Grid.Row="2" Source="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus3.png" /-->
-        <Image Grid.Column="2" Grid.Row="2" Source="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus5.png" />
-        <!--Image Grid.Column="0" Grid.Row="2" Source="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Station.png" /-->
-        <!--Image Grid.Column="0" Grid.Row="2" Source="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Bus6.png" /-->
-        <!--Image Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Source="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Buses.jpg"/-->
+        <Image Grid.Column="0" Grid.Row="1" Source="Bus5.png" />
         <StackPanel Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Label Grid.Column="1" Grid.Row="1" Content="Выберите пользователя" HorizontalAlignment="Stretch" VerticalAlignment="Top"   MaxWidth="300" MaxHeight="35" Margin="0,0,0,10"/>
             <Button Command="{Binding CashierButton}" Content="Кассир"  MaxWidth="200" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" Margin="0 0 0 10"/>

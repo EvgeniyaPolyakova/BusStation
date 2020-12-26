@@ -10,7 +10,7 @@ using static Bus_Station.ViewModel.DetailRouteViewModel;
 
 namespace Bus_Station.ViewModel
 {
-    public class TimeTableViewModel : INotifyPropertyChanged
+    public class TimeTableViewModel : INotifyPropertyChanged, IDataErrorInfo
     {
         //private ObservableCollection<Trips> trips;
         private ObservableCollection<TimeTableModel> trips;
@@ -89,6 +89,8 @@ namespace Bus_Station.ViewModel
             startCities = startCities.Distinct(new CityComparer()).ToList();
             SelectStartCity = startCities[0];
             SelectEndCity = EndCities[0];
+            NameStop = "";
+            CostStop = "";
 
             /*cities = new List<string>()
                 {
@@ -110,6 +112,10 @@ namespace Bus_Station.ViewModel
         {
             get
             {
+                if (SelectStartCity == null)
+                {
+                    return this.endCities;
+                }
                 ObservableCollection<Point> endCities = new ObservableCollection<Point>();
                 var cities = this.endCities.Where(i => i.Name != SelectStartCity.Name).ToList().Distinct(new CityComparer()).ToList();
                 foreach (var item in cities)
@@ -171,6 +177,32 @@ namespace Bus_Station.ViewModel
             }
         }
 
+        private string textStartCity;
+        public string TextStartCity
+        {
+            get
+            {
+                return textStartCity;
+            }
+            set
+            {
+                textStartCity = value;
+            }
+        }
+
+        private string textEndCity;
+        public string TextEndCity
+        {
+            get
+            {
+                return textEndCity;
+            }
+            set
+            {
+                textEndCity = value;
+            }
+        }
+
         public Point SelectStartCity
         {
             get
@@ -179,9 +211,9 @@ namespace Bus_Station.ViewModel
             }
             set
             {
-                this.selectStartCity = value;
+              this.selectStartCity = value;
                 OnPropertyChanged("SelectStartCity");
-                OnPropertyChanged("EndCities");
+                //OnPropertyChanged("EndCities");
             }
         }
 
@@ -332,7 +364,8 @@ namespace Bus_Station.ViewModel
                         //this.TimeTravelStop = "";
                         this.NameStop = "";
                         this.CostStop = "";
-                    }));
+                    },
+                    (obj) => (NameStop != "" && CostStop != "" && Convert.ToDecimal(CostStop) < Cost)));
             }
         }
 
@@ -361,6 +394,21 @@ namespace Bus_Station.ViewModel
                     {
                         try
                         {
+                            //if (db.Route.Where(i => i.Departure_place == textStartCity).FirstOrDefault() == null)
+                            //{
+                            //    db.Route.Add(new Route()
+                            //    {
+                            //        Departure_place = textStartCity,
+                            //        Arrival_place =
+                            //    });
+
+                            //}
+
+                            //db.SaveChanges();
+
+                            string startCityForSave = selectStartCity == null ? textStartCity : Convert.ToString(selectStartCity.Name);
+                            string endCityForSave = selectEndCity == null ? textEndCity : Convert.ToString(selectEndCity.Name);
+
 
                             var times = new List<TimeSpan>();
                             foreach (var item in this.times)
@@ -378,8 +426,8 @@ namespace Bus_Station.ViewModel
 
                             var route = new TimeTableModel()
                             {
-                                DeparturePlace = Convert.ToString(selectStartCity),
-                                ArrivalPlace = Convert.ToString(selectEndCity),
+                                DeparturePlace = Convert.ToString(startCityForSave),
+                                ArrivalPlace = Convert.ToString(endCityForSave),
                                 Cost = Convert.ToInt32(this.cost),
                                 DepartureTime = times,
                                 StopList = stops,
@@ -466,7 +514,9 @@ namespace Bus_Station.ViewModel
                                 });
                             }
 
-                            var listIdTime = db.Trip_Route.OrderByDescending(i => i.IdTR).Take(route.DepartureTime.Count).Select(i => i.IdTR).ToList();
+                            db.SaveChanges();
+
+                            var listIdTime = db.Trip.OrderByDescending(i => i.IdTrip).Take(route.DepartureTime.Count).Select(i => i.IdTrip).ToList();
                             var idMaxTripRoute = db.Trip_Route.OrderByDescending(i => i.IdTR).FirstOrDefault().IdTR;
                             foreach (var idTime in listIdTime)
                             {
@@ -474,14 +524,15 @@ namespace Bus_Station.ViewModel
                                 {
                                     IdTR = ++idMaxTripRoute,
                                     IdRoute_FK = idRoute,
-                                    IdTrip_FK = idTime
+                                    IdTrip_FK = idTime,
+                                    isActive = 1
                                 });
                             }
 
                             db.SaveChanges();
 
 
-                            var newRoute = db.Route.Where(i => i.IdRoute == maxIdRoute).ToList().Select(i => new TimeTableModel(i)).ToList().FirstOrDefault();
+                            var newRoute = db.Route.Where(i => i.IdRoute == idRoute).ToList().Select(i => new TimeTableModel(i)).ToList().FirstOrDefault();
                             ListTrips.Add(newRoute);
 
 
@@ -497,8 +548,62 @@ namespace Bus_Station.ViewModel
                             var err = e.Message;
                             throw;
                         }
-                    }));
+                    },
+                    (obj) => (times.Count != 0 && Cost > 0)));
             }
+        }
+
+
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case "Cost":
+                        try
+                        {
+                            if (Cost <= 0)
+                            {
+                                error = "Стоимость должна быть положительная";
+                            }
+                        }
+
+                        catch (Exception)
+                        {
+                            error = "Стоимость должна быть числом";
+                        }
+                        break;
+                    case "CostStop":
+                        try
+                        {
+                            if (Convert.ToDecimal(CostStop) >= Cost)
+                            {
+                                error = "Стоимость должна быть меньше стоимости маршрута";
+                            }
+
+                            if (Convert.ToDecimal(CostStop) <= 0)
+                            {
+                                error = "Стоимость должна быть положительная";
+                            }
+                        }
+                      
+                        catch (Exception)
+                        {
+                            error = "Стоимость должна быть числом";
+                        }
+                        break;
+                    case "Position":
+                        //Обработка ошибок для свойства Position
+                        break;
+                }
+                return error;
+            }
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

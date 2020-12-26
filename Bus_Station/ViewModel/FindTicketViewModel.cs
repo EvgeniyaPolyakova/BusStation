@@ -22,15 +22,15 @@ namespace Bus_Station.ViewModel
         public bool isCity { get; set; }
     }
 
-    public class AvailableCity
+    public class AvailableTrip
     {
         public int IdTrip { get; set; }
         public string Cost { get; set; }
         public TimeSpan Time { get; set; }
     }
-    public class FindTicketViewModel : INotifyPropertyChanged, IRequireViewIdentification
+    public class FindTicketViewModel : INotifyPropertyChanged, IRequireViewIdentification, IDataErrorInfo
     {
-        ObservableCollection<AvailableCity> availableTrips;
+        ObservableCollection<AvailableTrip> availableTrips;
         private List<Point> startCities;
         private ObservableCollection<Point> endCities;
         private ObservableCollection<Point> endStations;
@@ -39,8 +39,10 @@ namespace Bus_Station.ViewModel
         private DateTime departureDate;
         private int passengerNumber;
 
+        private string message;
+        
         private List<PassangerModel> passangers;
-        private AvailableCity selectedTrip;
+        private AvailableTrip selectedTrip;
 
         private int countCurrentPassangerAtBus = 0;
         BusStationContext db;
@@ -49,7 +51,7 @@ namespace Bus_Station.ViewModel
         public int countFillingQuestionnaire = 0;
         public FindTicketViewModel()
         {
-            availableTrips = new ObservableCollection<AvailableCity>();
+            availableTrips = new ObservableCollection<AvailableTrip>();
             _viewId = Guid.NewGuid();
             startCities = new List<Point>();
             endCities = new ObservableCollection<Point>();
@@ -76,7 +78,6 @@ namespace Bus_Station.ViewModel
                     DepPlace = city.Departure_place
                 });
             }
-
 
             //foreach (var cities in db.Route.ToList().Select(i => new FindTicketModel(i)).ToList())
             //{
@@ -111,6 +112,7 @@ namespace Bus_Station.ViewModel
             SelectStartCity = startCities[0];
             SelectEndCity = EndCities[0];
             DepartureDate = DateTime.Today;
+            PassengerNumber = 1;
             //foreach (var cities in db.Route.ToList().Select(i => new FindTicketModel(i)).GroupBy(x => x.EndCities).Select(j => j.First()).ToList())
             //{
             //    endStations.Add(cities);
@@ -139,8 +141,7 @@ namespace Bus_Station.ViewModel
         {
             get { return _viewId; }
         }
-
-
+        
         public List<Point> StartCities
         {
             get
@@ -163,7 +164,7 @@ namespace Bus_Station.ViewModel
             }
         }
 
-        public ObservableCollection<AvailableCity> AvailableTrips
+        public ObservableCollection<AvailableTrip> AvailableTrips
         {
             get
             {
@@ -176,7 +177,18 @@ namespace Bus_Station.ViewModel
             }
         }
 
-
+        public string Message
+        {
+            get
+            {
+                return message;
+            }
+            set
+            {
+                message = value;
+                OnPropertyChanged("Message");
+            }
+        }
 
         public Point SelectEndCity
         {
@@ -231,7 +243,7 @@ namespace Bus_Station.ViewModel
             }
         }
 
-        public AvailableCity SelectedTrip
+        public AvailableTrip SelectedTrip
         {
             get
             {
@@ -252,90 +264,101 @@ namespace Bus_Station.ViewModel
                 return findTrip ??
                     (findTrip = new RelayCommand(obj =>
                     {
-                        AvailableTrips.Clear();
-
-                        var selectedDate = new DateTime(DepartureDate.Year, DepartureDate.Month, DepartureDate.Day);
-                        if (selectedDate < DateTime.Today)
+                        try
                         {
-                            return;
-                        }
-
-
-                        var opportunityFromRoute = db.Route.Where(i => i.Departure_place == SelectStartCity.Name && i.Arrival_place == SelectEndCity.Name).ToList();
-                        var opportunityFromRouteStation = db.Route_Station.Where(i => i.Route.Departure_place == SelectStartCity.Name && i.Station.Name == SelectEndCity.Name).ToList();
-
-                        foreach (var item in opportunityFromRoute)
-                        {
-                            var listTrips = selectedDate == DateTime.Today ? item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute && i.Trip.Departure_time >= DateTime.Now.TimeOfDay).ToList() : item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute).ToList();
-                            foreach (var trip in listTrips)
-                            {
-                                var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
-                                                .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
-                                                .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
-                                                .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == trip.IdTrip_FK)
-                                                .Count();
-
-                                var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == trip.IdTrip_FK).FirstOrDefault().Bus.Seats;
-
-                                if (countPlacesAtTheBus - countPassangers >= PassengerNumber)
-                                {
-                                    AvailableTrips.Add(new AvailableCity()
-                                    {
-                                        IdTrip = trip.IdTrip_FK,
-                                        Time = trip.Trip.Departure_time,
-                                        Cost = item.Cost.ToString()
-                                    });
-                                }
-                            }
-                            //AvailableTrips.Add(new AvailableCity() {
-                            //    Time = item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute).FirstOrDefault().Trip.Departure_time,
-                            //    Cost = item.Cost.ToString()
-                            //});
-                        }
-
-                        foreach (var item in opportunityFromRouteStation)
-                        {
-                            var listTrips = selectedDate == DateTime.Today ? item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute && i.Trip.Departure_time >= DateTime.Now.TimeOfDay).ToList() : item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute).ToList();
-                            foreach (var trip in listTrips)
-                            {
-                                var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
-                                                .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
-                                                .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
-                                                .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == trip.IdTrip_FK)
-                                                .Count();
-
-                                var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == trip.IdTrip_FK).FirstOrDefault().Bus.Seats;
-
-                                if (countPlacesAtTheBus - countPassangers >= PassengerNumber)
-                                {
-                                    AvailableTrips.Add(new AvailableCity()
-                                    {
-                                        IdTrip = trip.IdTrip_FK,
-                                        Time = trip.Trip.Departure_time,
-                                        Cost = item.Cost.Cost1.ToString()
-                                    });
-                                }
-                            }
-                            //AvailableTrips.Add(new AvailableCity()
-                            //{
-                            //    Time = item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute).FirstOrDefault().Trip.Departure_time,
-                            //    Cost = item.Cost.Cost1.ToString()
-                            //});
-                            var sort = AvailableTrips.OrderBy(i => i.Time).ToList();
                             AvailableTrips.Clear();
-                            foreach (var trip in sort)
+                            Message = " ";
+
+                            var selectedDate = new DateTime(DepartureDate.Year, DepartureDate.Month, DepartureDate.Day);
+
+
+                            var opportunityFromRoute = db.Route.Where(i => i.Departure_place == SelectStartCity.Name && i.Arrival_place == SelectEndCity.Name).ToList();
+                            var opportunityFromRouteStation = db.Route_Station.Where(i => i.Route.Departure_place == SelectStartCity.Name && i.Station.Name == SelectEndCity.Name).ToList();
+
+                            foreach (var item in opportunityFromRoute)
                             {
-                                AvailableTrips.Add(new AvailableCity()
+                                var listTrips = selectedDate == DateTime.Today ? item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute && i.Trip.Departure_time >= DateTime.Now.TimeOfDay).ToList() : item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute).ToList();
+                                foreach (var trip in listTrips)
                                 {
-                                    IdTrip = trip.IdTrip,
-                                    Time = trip.Time,
-                                    Cost = trip.Cost
-                                });
+                                    var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
+                                                    .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
+                                                    .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
+                                                    .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == trip.IdTrip_FK)
+                                                    .Count();
+
+                                    var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == trip.IdTrip_FK).FirstOrDefault().Bus.Seats;
+
+                                    if (countPlacesAtTheBus - countPassangers >= PassengerNumber)
+                                    {
+                                        AvailableTrips.Add(new AvailableTrip()
+                                        {
+                                            IdTrip = trip.IdTrip_FK,
+                                            Time = trip.Trip.Departure_time,
+                                            Cost = item.Cost.ToString()
+                                        });
+                                    }
+                                }
+                                //AvailableTrips.Add(new AvailableTrip() {
+                                //    Time = item.Trip_Route.Where(i => i.IdRoute_FK == item.IdRoute).FirstOrDefault().Trip.Departure_time,
+                                //    Cost = item.Cost.ToString()
+                                //});
                             }
 
-                            SelectedTrip = AvailableTrips.Count > 0 ? AvailableTrips[0] : null;
+                            foreach (var item in opportunityFromRouteStation)
+                            {
+                                var listTrips = selectedDate == DateTime.Today ? item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute && i.Trip.Departure_time >= DateTime.Now.TimeOfDay).ToList() : item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute).ToList();
+                                foreach (var trip in listTrips)
+                                {
+                                    var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
+                                                    .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
+                                                    .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
+                                                    .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == trip.IdTrip_FK)
+                                                    .Count();
+
+                                    var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == trip.IdTrip_FK).FirstOrDefault().Bus.Seats;
+
+                                    if (countPlacesAtTheBus - countPassangers >= PassengerNumber)
+                                    {
+                                        AvailableTrips.Add(new AvailableTrip()
+                                        {
+                                            IdTrip = trip.IdTrip_FK,
+                                            Time = trip.Trip.Departure_time,
+                                            Cost = item.Cost.Cost1.ToString()
+                                        });
+                                    }
+                                }
+                                //AvailableTrips.Add(new AvailableTrip()
+                                //{
+                                //    Time = item.Route.Trip_Route.Where(i => i.IdRoute_FK == item.Route.IdRoute).FirstOrDefault().Trip.Departure_time,
+                                //    Cost = item.Cost.Cost1.ToString()
+                                //});
+                                var sort = AvailableTrips.OrderBy(i => i.Time).ToList();
+                                AvailableTrips.Clear();
+
+
+                                foreach (var trip in sort)
+                                {
+                                    AvailableTrips.Add(new AvailableTrip()
+                                    {
+                                        IdTrip = trip.IdTrip,
+                                        Time = trip.Time,
+                                        Cost = trip.Cost
+                                    });
+                                }
+
+                                SelectedTrip = AvailableTrips.Count > 0 ? AvailableTrips[0] : null;
+                            }
+                            if (AvailableTrips.Count == 0)
+                            {
+                                Message = "Рейсов на выбранную дату нет";
+                            }
                         }
-                    }));
+                        catch (Exception)
+                        {
+                            Message = "Рейсов на выбранную дату нет";
+                        }
+                    },
+                    (obj) => (DepartureDate >= DateTime.Today && PassengerNumber > 0 && PassengerNumber <= 15)));
             }
         }
 
@@ -348,24 +371,31 @@ namespace Bus_Station.ViewModel
                 return arrange ??
                     (arrange = new RelayCommand(obj =>
                     {
-
-                        var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
-                                            .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
-                                            .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
-                                            .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == selectedTrip.IdTrip)
-                                            .ToList()
-                                            .Count();
-
-                        countCurrentPassangerAtBus = countPassangers;
-                        var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == selectedTrip.IdTrip).FirstOrDefault().Bus.Seats;
-
-                        if (countPlacesAtTheBus - countCurrentPassangerAtBus < PassengerNumber) return;
-
+                        try
                         {
-                            passangerView = new Passenger();
-                            passangerView.AddPassanger += CreatedNewPassanger;
-                            passangerView.DefineEvent();
-                            passangerView.Show();
+                            Message = " ";
+                            var countPassangers = db.Route.Where(i => i.Departure_place == selectStartCity.Name && i.Arrival_place == selectEndCity.Name).FirstOrDefault()
+                                                .Trip_Route.Join(db.Trip, tr => tr.IdTrip_FK, t => t.IdTrip, (tr, t) => new { tr = tr, t = t })
+                                                .Join(db.Ticket, t => t.t.IdTrip, tic => tic.IdTrip_FK, (t, tic) => new { t = t, tic = tic })
+                                                .Where(i => i.tic.Departure_date.Date == DepartureDate.Date && i.t.t.IdTrip == selectedTrip.IdTrip)
+                                                .ToList()
+                                                .Count();
+
+                            countCurrentPassangerAtBus = countPassangers;
+                            var countPlacesAtTheBus = db.Trip.Where(j => j.IdTrip == selectedTrip.IdTrip).FirstOrDefault().Bus.Seats;
+
+                            if (countPlacesAtTheBus - countCurrentPassangerAtBus < PassengerNumber) return;
+
+                            {
+                                passangerView = new Passenger();
+                                passangerView.AddPassanger += CreatedNewPassanger;
+                                passangerView.DefineEvent();
+                                passangerView.Show();
+                            }
+                        }
+                        catch
+                        {
+                            Message = "Выберите рейс";
                         }
                     }));
             }
@@ -410,12 +440,13 @@ namespace Bus_Station.ViewModel
 
             iTextSharp.text.Document doc = new iTextSharp.text.Document();
 
-            PdfWriter.GetInstance(doc, new FileStream("C:\\Users\\user\\Desktop\\Билеты\\Ticket_" + selectedTrip.IdTrip + "_" + Convert.ToString(DepartureDate.Day) + "." + Convert.ToString(DepartureDate.Month) + "." + Convert.ToString(DepartureDate.Year) + "_" + countCurrentPassangerAtBus++ + ".pdf", FileMode.Create));
+            PdfWriter.GetInstance(doc, new FileStream("C:\\Users\\user\\Desktop\\Ticket_" + selectedTrip.IdTrip + "_" + Convert.ToString(DepartureDate.Day) + "." + Convert.ToString(DepartureDate.Month) + "." + Convert.ToString(DepartureDate.Year) + "_" + countCurrentPassangerAtBus++ + ".pdf", FileMode.Create));
             countCurrentPassangerAtBus--;
 
             doc.Open();
 
-            BaseFont baseFont = BaseFont.CreateFont("C:\\Users\\user\\Desktop\\ИГЭУ\\3 курс\\Конструирование ПО\\АВТОВОКЗАЛ\\Bus_Station\\Bus_Station\\bin\\Debug\\arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+        //C:\\Users\\user\\Desktop\\ИГЭУ\\3 курс\\Конструирование ПО\\АВТОВОКЗАЛ\\Bus_Station\\
+            BaseFont baseFont = BaseFont.CreateFont("arial.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             iTextSharp.text.Font font = new iTextSharp.text.Font(baseFont, iTextSharp.text.Font.DEFAULTSIZE, iTextSharp.text.Font.NORMAL);
 
             PdfPTable table = new PdfPTable(2);
@@ -494,7 +525,7 @@ namespace Bus_Station.ViewModel
                 return changeSelectedTrip ??
                     (changeSelectedTrip = new RelayCommand(obj =>
                     {
-                        this.SelectedTrip = (AvailableCity)obj;
+                        this.SelectedTrip = (AvailableTrip)obj;
                     }));
             }
         }
@@ -527,12 +558,39 @@ namespace Bus_Station.ViewModel
                     (changeUser = new RelayCommand(obj =>
                     {
                         MainWindow mainWindow = new MainWindow();
-                        mainWindow.ShowDialog();
                         WindowManager.CloseWindow(ViewID);
+                        mainWindow.ShowDialog();
                     }));
             }
         }
 
+        public string this[string columnName]
+        {
+            get
+            {
+                string error = String.Empty;
+                switch (columnName)
+                {
+                    case "PassengerNumber":
+                            if (PassengerNumber <= 0 || PassengerNumber > 15)
+                            {
+                                error = "Число пассажиров должно быть в диапазоне от 1 до 15";
+                            }
+                        break;
+                    case "CostStop":
+                        break;
+                    case "Position":
+                        //Обработка ошибок для свойства Position
+                        break;
+                }
+                return error;
+            }
+        }
+        public string Error
+        {
+            get { throw new NotImplementedException(); }
+        }
+                        
 
         class CityComparer : IEqualityComparer<Point>
         {

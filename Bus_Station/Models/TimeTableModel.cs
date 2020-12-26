@@ -23,6 +23,7 @@ namespace Bus_Station.Models
         public TimeTableModel() { }
         public TimeTableModel(Route route)
         {
+
             idRoute = route.IdRoute;
             DeparturePlace = route.Departure_place;
             ArrivalPlace = route.Arrival_place;

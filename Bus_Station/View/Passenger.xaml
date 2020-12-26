@@ -3,12 +3,57 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Icon="C:\Users\user\Desktop\ИГЭУ\3 курс\Конструирование ПО\АВТОВОКЗАЛ\Icon.jpg"
+      
         xmlns:local="clr-namespace:Bus_Station"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="Список рейсов" Height="320" Width="400"  MinHeight="300" MinWidth="385" >
+        Title="Данные пассажира" Height="350" Width="400"  MinHeight="300" MinWidth="385" >
     <Window.Resources>
+        <ControlTemplate x:Key="validationFailed">
+            <StackPanel Orientation="Horizontal">
+                <Border BorderBrush="Red" BorderThickness="1">
+                    <AdornedElementPlaceholder />
+                </Border>
+                <TextBlock Foreground="Red" FontSize="20" FontWeight="Bold">Стоимость остановки больше стоимости маршрута</TextBlock>
+            </StackPanel>
+        </ControlTemplate>
+        
+            <Style x:Key="show" TargetType="{x:Type Label}">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="True">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style x:Key="hide" TargetType="{x:Type Label}">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
+        <Style x:Key="showTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="hideTextBlock" TargetType="{x:Type TextBlock}">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Mess, Mode=TwoWay}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="Label">
             <Setter Property="Control.FontFamily" Value="Times New Roman" />
             <Setter Property="Control.FontSize" Value="18" />
@@ -36,23 +81,44 @@
             <Label Grid.Column="1" Grid.Row="0" Content="Пассажир" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="26"/>
         </StackPanel>
 
+        <!--Label Content="Введите данные" Style="{StaticResource hide}" Foreground="Red" FontFamily="Red" FontSize="16"/-->
+
         <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal">
             <Label Content="ФИО" HorizontalAlignment="Left" />
-            <TextBox Text="{Binding Fio, UpdateSourceTrigger=PropertyChanged}" MinHeight="23"  HorizontalAlignment="Left"  MaxWidth="345" MinWidth="345" />
+            <TextBlock Text="{Binding Message}" FontFamily="Times New Roman" FontSize="18" Foreground="Red" Margin="50 0 0 0" />
+        </StackPanel>
+        <TextBox Text="{Binding Fio, UpdateSourceTrigger=PropertyChanged}" MinHeight="23"  HorizontalAlignment="Left"  MaxWidth="345" MinWidth="345" />
             <Label Content="Дата рождения" HorizontalAlignment="Left" />
             <DatePicker SelectedDate="{Binding DateOfBirth, UpdateSourceTrigger=LostFocus}" HorizontalAlignment="Left"  MinWidth="141"/>
             <Label Content="Паспорт" HorizontalAlignment="Left"   />
             <StackPanel Orientation="Horizontal">
                 <Label Content="Серия" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                <TextBox Text="{Binding PassportSeries, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" MaxHeight="25"  MaxWidth="100" MinWidth="100"/>
+                <TextBox HorizontalAlignment="Left" MaxHeight="25"  MaxWidth="100" MinWidth="100">
+                    <TextBox.Text>
+                        <Binding Path="PassportSeries" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <Label Content="Номер" HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                <TextBox Text="{Binding PassportNumber, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" MaxHeight="25"  MaxWidth="120" MinWidth="120"/>
+                <TextBox HorizontalAlignment="Left" MaxHeight="25"  MaxWidth="120" MinWidth="120">
+                    <TextBox.Text>
+                        <Binding Path="PassportNumber" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <DataErrorValidationRule />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
         </StackPanel>
 
 
-        <Button Grid.Row="2" Grid.Column="0" Command="{Binding Arrange}" Content="Оформить" HorizontalAlignment="Center"  VerticalAlignment="Center" MinWidth="152"  Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" />
-        <Button Grid.Row="2" Grid.Column="1" Command="{Binding CloseWindow}" Content="Закрыть" HorizontalAlignment="Center"  VerticalAlignment="Center" MinWidth="152"  Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" />
+        <Button Grid.Row="2" Grid.Column="0" Command="{Binding Arrange}" Content="Сохранить" HorizontalAlignment="Center"  MinWidth="120" Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18" />
+        <Button Grid.Row="2" Grid.Column="1" Command="{Binding CloseWindow}" Content="Закрыть" HorizontalAlignment="Center"  VerticalAlignment="Center" MinWidth="152"  Style="{DynamicResource MaterialDesignFlatButton}" FontFamily="Times New Roman" FontWeight="Bold" BorderThickness="2" BorderBrush="Orange" FontSize="18"/>
 
     </Grid>
 </Window>

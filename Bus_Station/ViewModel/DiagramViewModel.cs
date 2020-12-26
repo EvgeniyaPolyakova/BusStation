@@ -14,21 +14,25 @@ namespace Bus_Station.ViewModel
     {
 
         public SeriesCollection Proceeds { get; set; }
-        //public Func<string, string> yFornatter { get; set; }
+        public Func<string, string> yFornatter { get; set; }
         public string[] LabelsX { get; set; }
-        int[] numMonths = new int[3];
+        //int[] numMonths = new int[3];
         DAL.BusStationContext db;
-        string[] months = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        //string[] months = new[] { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 
         DateTime dateStart;
         DateTime dateEnd;
+        public Decimal result;
+        public bool b;
+
+        private string message;
 
         public ColorsCollection ColorCollection { get; set; }
 
-        int monthStart;
-        int monthEnd;
+        //int monthStart;
+        //int monthEnd;
         private Dictionary<string, List<float>> report;
-        int startMonth = DateTime.Today.Month - 3;
+        //int startMonth = DateTime.Today.Month - 3;
 
         public DiagramViewModel()
         {
@@ -49,9 +53,9 @@ namespace Bus_Station.ViewModel
             }
 
             LabelsX = new string[3];
+            b = false;
 
-
-            int count = 0;
+            /*int count = 0;
             for (int i = startMonth; count < 3; i++)
             {
                 if (i==12)
@@ -64,12 +68,28 @@ namespace Bus_Station.ViewModel
             }
 
             monthStart = numMonths[0];
-            monthEnd = numMonths[2];
+            monthEnd = numMonths[2];*/
             CreateCharts();
+        }
+
+        public string Message
+        {
+            get
+            {
+                return message;
+            }
+            set
+            {
+                message = value;
+                OnPropertyChanged("Message");
+            }
         }
 
         void CreateCharts()
         {
+            b = false;
+            Message = " ";
+
             if (Proceeds == null)
             {
                 Proceeds = new SeriesCollection();
@@ -99,14 +119,22 @@ namespace Bus_Station.ViewModel
                     .Sum(i => db.Cost.Where(c => c.IdCost == i.t.tr.s.IdCost_FK).FirstOrDefault().Cost1);
 
                 List<double> values = new List<double>();
-                var result = rev1 + rev2;
+                result = Convert.ToDecimal(rev1 + rev2);
+                if (result != 0)
+                    b = true;
+
+
                 values.Add(Convert.ToDouble(result));
                 Proceeds.Add(new PieSeries
                 {
-                    Title = route.Departure_place + " " + route.Arrival_place,
+                    Title = route.Departure_place + " " + "-" + " " + route.Arrival_place,
                     Values = new ChartValues<double>(values)
                 });
 
+            }
+            if (b == false)
+            {
+                Message = "Выручка за выбранный вами период равна 0 рублей";
             }
         }
 

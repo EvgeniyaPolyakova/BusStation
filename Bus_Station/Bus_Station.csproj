@@ -94,6 +94,7 @@
     <Compile Include="DAL\Bus.cs" />
     <Compile Include="DAL\BusStationContext.cs" />
     <Compile Include="DAL\Cost.cs" />
+    <Compile Include="DAL\C__MigrationHistory.cs" />
     <Compile Include="DAL\Route.cs" />
     <Compile Include="DAL\Route_Station.cs" />
     <Compile Include="DAL\Station.cs" />
@@ -101,19 +102,6 @@
     <Compile Include="DAL\Ticket.cs" />
     <Compile Include="DAL\Trip.cs" />
     <Compile Include="DAL\Trip_Route.cs" />
-    <Compile Include="Migrations\202012071924319_InitialCreate.cs" />
-    <Compile Include="Migrations\202012071924319_InitialCreate.Designer.cs">
-      <DependentUpon>202012071924319_InitialCreate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012190923105_add isActive column.cs" />
-    <Compile Include="Migrations\202012190923105_add isActive column.Designer.cs">
-      <DependentUpon>202012190923105_add isActive column.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202012201630525_adding isActive column.cs" />
-    <Compile Include="Migrations\202012201630525_adding isActive column.Designer.cs">
-      <DependentUpon>202012201630525_adding isActive column.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\FindTicketModel.cs" />
     <Compile Include="Models\PassangerModel.cs" />
     <Compile Include="Models\TimeTableModel.cs" />
@@ -121,7 +109,9 @@
     <Compile Include="ViewModel\DetailRouteViewModel.cs" />
     <Compile Include="ViewModel\DiagramViewModel.cs" />
     <Compile Include="ViewModel\FindTicketViewModel.cs" />
+    <Compile Include="ViewModel\MessageViewModel.cs" />
     <Compile Include="ViewModel\PassengerViewModel.cs" />
+    <Compile Include="ViewModel\PasswordWindowViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\TimeTableViewModel.cs" />
     <Compile Include="View\Choice.xaml.cs">
@@ -133,6 +123,9 @@
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="View\Diagram.xaml.cs">
       <DependentUpon>Diagram.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Message.xaml.cs">
+      <DependentUpon>Message.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Passenger.xaml.cs">
       <DependentUpon>Passenger.xaml</DependentUpon>
@@ -177,6 +170,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Message.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Passenger.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -211,15 +208,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="Migrations\202012071924319_InitialCreate.resx">
-      <DependentUpon>202012071924319_InitialCreate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012190923105_add isActive column.resx">
-      <DependentUpon>202012190923105_add isActive column.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202012201630525_adding isActive column.resx">
-      <DependentUpon>202012201630525_adding isActive column.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -231,7 +219,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Bus5.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.2.0\build\MaterialDesignThemes.targets')" />
